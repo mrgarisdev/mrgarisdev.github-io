@@ -17,24 +17,39 @@ const texts = {
 
 function setLang(lang) {
   currentLang = lang;
-  document.getElementById("userInput").placeholder = texts[lang].placeholder;
+  document.getElementById("userInput").placeholder =
+    texts[lang].placeholder;
+
+  document.querySelectorAll(".lang-switch button").forEach(btn => {
+    btn.style.opacity = "0.6";
+  });
+
+  event.target.style.opacity = "1";
 }
 
 function addMessage(text, cls) {
   const div = document.createElement("div");
   div.className = `message ${cls}`;
   div.textContent = text;
-  document.getElementById("messages").appendChild(div);
+
+  const messages = document.getElementById("messages");
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
 }
 
 function sendMessage() {
   const input = document.getElementById("userInput");
-  if (!input.value) return;
+  const text = input.value.trim();
+  if (!text) return;
 
-  addMessage(input.value, "user");
+  addMessage(text, "user");
   input.value = "";
 
   setTimeout(() => {
     addMessage(texts[currentLang].bot, "bot");
-  }, 500);
+  }, 600);
 }
+
+document.getElementById("userInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") sendMessage();
+});
